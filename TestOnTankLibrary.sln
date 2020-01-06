@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnTankLibrary", "TestOnTankLibrary\TestOnTankLibrary.csproj", "{3C783702-0DBA-4FE8-967E-7E7EF602C098}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C783702-0DBA-4FE8-967E-7E7EF602C098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C783702-0DBA-4FE8-967E-7E7EF602C098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C783702-0DBA-4FE8-967E-7E7EF602C098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C783702-0DBA-4FE8-967E-7E7EF602C098}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
