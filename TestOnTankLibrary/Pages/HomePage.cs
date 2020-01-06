@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -46,6 +48,26 @@ namespace TestOnTankLibrary.Pages
             ExpectedSetting expected = (ExpectedSetting)settings.Expecteds.Find("Add.Title");
             string title = driver.Title;
             Assert.AreEqual(expected.Value, title);
+        }
+
+        [TestCase("Home.Group.WWI")]
+        [TestCase("Home.Group.Interwar")]
+        [TestCase("Home.Group.WWII")]
+        [TestCase("Home.Group.Modern")]
+        public void TestClickOnSpecificGroup(string groupKey)
+        {
+            //Arrange
+            ElementLocation location = (ElementLocation)settings.Locations.Find(groupKey);
+            IWebElement element = driver.FindElement(location);
+
+            //Act
+            if (element != null) element.Click();
+
+            //Assert
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Home.List.Stages");
+            IReadOnlyCollection<IWebElement> stages = driver.FindElements(expectedLocation);
+            bool hasInvalidStages = stages.Any(s => s.Text != location.Value);
+            Assert.AreEqual(false, hasInvalidStages);
         }
     }
 }
