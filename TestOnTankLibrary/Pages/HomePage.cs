@@ -89,5 +89,42 @@ namespace TestOnTankLibrary.Pages
             int groupCount = stages.GroupBy(s => s.Text).Count();
             Assert.AreEqual(4, groupCount, $"Expecting all 4 group of stages but only {groupCount}.");
         }
+
+        [TestCase(2, "Stage")]
+        [TestCase(3, "Type")]
+        public void TestSelectOnList(int selectRow, string clickCol)
+        {
+            //Arrange
+
+            //Get expected tank name
+            string nameLocKey = $"Home.List.All.Data{selectRow}.Name";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey);
+            IWebElement element = driver.FindElement(location);
+            string nameOfTank = element.Text;
+
+            //Get Col to click to change the selected row
+            string clickColLocKey = $"Home.List.All.Data{selectRow}.{clickCol}";
+            location = (ElementLocation)settings.Locations.Find(clickColLocKey);
+            element = driver.FindElement(location);
+
+            //Get the name in the description area of the current selected tank (before changing row)
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Home.Desc.Name");
+            IWebElement expectedElement = driver.FindElement(expectedLocation);
+            string prevNameOfTank = expectedElement.Text;
+
+            //Act
+            if (element != null) element.Click();
+
+            //Assert
+
+            //Wait for the name in the description area of the current selected tank to change (after changing row)
+            ByExtensions.ElementLocation(expectedLocation).ElementTextChanged(driver, prevNameOfTank, 10);
+
+            //Get the new tank name
+            expectedElement = driver.FindElement(expectedLocation);
+            string actualNameOfTank = expectedElement.Text;
+
+            Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
+        }
     }
 }
