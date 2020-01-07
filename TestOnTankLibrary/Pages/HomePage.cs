@@ -97,14 +97,14 @@ namespace TestOnTankLibrary.Pages
             //Arrange
 
             //Get expected tank name
-            string nameLocKey = $"Home.List.All.Data{selectRow}.Name";
-            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey);
+            string nameLocKey = $"Home.List.All.Data.Name";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey).Clone(selectRow);
             IWebElement element = driver.FindElement(location);
             string nameOfTank = element.Text;
 
             //Get Col to click to change the selected row
-            string clickColLocKey = $"Home.List.All.Data{selectRow}.{clickCol}";
-            location = (ElementLocation)settings.Locations.Find(clickColLocKey);
+            string clickColLocKey = $"Home.List.All.Data.{clickCol}";
+            location = (ElementLocation)settings.Locations.Find(clickColLocKey).Clone(selectRow);
             element = driver.FindElement(location);
 
             //Get the name in the description area of the current selected tank (before changing row)
@@ -129,13 +129,13 @@ namespace TestOnTankLibrary.Pages
 
         [TestCase(2)]
         [TestCase(3)]
-        public void TestDisplayingDetail(int selectRow)
+        public void TestDisplayingDetailPage(int selectRow)
         {
             //Arrange
 
             //Get expected tank name
-            string nameLocKey = $"Home.List.All.Data{selectRow}.Name";
-            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey);
+            string nameLocKey = $"Home.List.All.Data.Name";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey).Clone(selectRow);
             IWebElement element = driver.FindElement(location);
             string nameOfTank = element.Text;
 
@@ -144,10 +144,40 @@ namespace TestOnTankLibrary.Pages
 
             //Assert
 
-            //Wait for the name in the description area of the current selected tank to change (after changing row)
+            //Wait for displaying detail page
             ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Detail.Name");
             IWebElement expectedElement = driver.FindElement(expectedLocation, 10);
             string actualNameOfTank = expectedElement.Text;
+
+            Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
+        }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        public void TestDisplayingEditPage(int selectRow)
+        {
+            //Arrange
+
+            //Get expected tank name
+            string nameLocKey = $"Home.List.All.Data.Name";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey).Clone(selectRow);
+            IWebElement element = driver.FindElement(location);
+            string nameOfTank = element.Text;
+
+            //Get Edit button element
+            string editBtnKey = $"Home.List.All.Data.Btn.Edit";
+            location = (ElementLocation)settings.Locations.Find(editBtnKey).Clone(selectRow);
+            element = driver.FindElement(location);
+
+            //Act
+            if (element != null) element.Click();
+
+            //Assert
+
+            //Wait for displaying edit page
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Edit.Name");
+            IWebElement expectedElement = driver.FindElement(expectedLocation, 10);
+            string actualNameOfTank = expectedElement.GetAttribute("value");
 
             Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
         }
