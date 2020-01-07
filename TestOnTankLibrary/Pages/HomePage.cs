@@ -47,7 +47,7 @@ namespace TestOnTankLibrary.Pages
             //Assert
             ExpectedSetting expected = (ExpectedSetting)settings.Expecteds.Find("Add.Title");
             string title = driver.Title;
-            Assert.AreEqual(expected.Value, title);
+            Assert.AreEqual(expected.Value, title, $"Expecting the title of Add page '{expected.Value}' but was '{title}'.");
         }
 
         [TestCase("Home.Group.WWI")]
@@ -67,7 +67,27 @@ namespace TestOnTankLibrary.Pages
             ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Home.List.Stages");
             IReadOnlyCollection<IWebElement> stages = driver.FindElements(expectedLocation);
             bool hasInvalidStages = stages.Any(s => s.Text != location.Value);
-            Assert.AreEqual(false, hasInvalidStages);
+            Assert.IsFalse(hasInvalidStages, $"Expecting all stages to be '{groupKey}' but not.");
+        }
+
+        [Test]
+        public void TestClickOnAllGroup()
+        {
+            //Arrange
+            ElementLocation location = (ElementLocation)settings.Locations.Find("Home.Group.All");
+            IWebElement element = driver.FindElement(location);
+
+            //Act
+            if (element != null) element.Click();
+
+            //Assert
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Home.List.Stages");
+            IReadOnlyCollection<IWebElement> stages = driver.FindElements(expectedLocation);
+            bool hasInvalidStages = stages.Any(s => s.Text == location.Value);
+            Assert.IsFalse(hasInvalidStages, $"Expecting no stages to be '{location.Value}' but not.");
+            Assert.IsTrue(stages.Any(), $"Expecting data of '{location.Value}' but nothing.");
+            int groupCount = stages.GroupBy(s => s.Text).Count();
+            Assert.AreEqual(4, groupCount, $"Expecting all 4 group of stages but only {groupCount}.");
         }
     }
 }
