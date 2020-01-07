@@ -126,5 +126,32 @@ namespace TestOnTankLibrary.Pages
 
             Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
         }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        public void TestDisplayingDetail(int selectRow)
+        {
+            //Arrange
+
+            //Get expected tank name
+            string nameLocKey = $"Home.List.All.Data{selectRow}.Name";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey);
+            IWebElement element = driver.FindElement(location);
+            string nameOfTank = element.Text;
+
+            //Act
+            if (element != null) element.Click();
+
+            //Assert
+
+            //Wait for the name in the description area of the current selected tank to change (after changing row)
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Detail.Name");
+            IWebElement expectedElement = driver.FindElement(expectedLocation, 10);
+            string actualNameOfTank = expectedElement.Text;
+
+            Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
+        }
+
+
     }
 }
