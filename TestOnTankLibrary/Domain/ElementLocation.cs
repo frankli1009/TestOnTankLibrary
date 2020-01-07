@@ -34,5 +34,20 @@ namespace TestOnTankLibrary.Domain
             errorMessage = string.Empty;
             return true;
         }
+
+        public ElementLocation Clone(params object[] args)
+        {
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            return new ElementLocation
+            {
+                Key = this.Key,
+                LocationType = this.LocationType,
+                Value = string.Format(this.Value, args)
+            };
+        }
     }
 }
