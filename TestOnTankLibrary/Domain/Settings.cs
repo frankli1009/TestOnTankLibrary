@@ -1,6 +1,9 @@
 ﻿using System;
 namespace TestOnTankLibrary.Domain
 {
+    /// <summary>
+    /// The settings of Urls, Locations and ExpectedSettings for testing
+    /// </summary>
     public class Settings
     {
         private static Settings settings;
@@ -12,10 +15,17 @@ namespace TestOnTankLibrary.Domain
         public CustomDataCollection<ElementLocation> Locations => locations;
         public CustomDataCollection<ExpectedSetting> Expecteds => expecteds;
 
-        public Settings()
+        /// <summary>
+        /// Make constructor private to force using of settings by GetInstance
+        /// </summary>
+        private Settings()
         {
         }
 
+        /// <summary>
+        /// Get the instance of Settings which will be shared by all requests
+        /// </summary>
+        /// <returns></returns>
         public static Settings GetInstance()
         {
             if (settings == null) settings = new Settings();

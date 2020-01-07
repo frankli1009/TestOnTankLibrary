@@ -18,14 +18,14 @@ namespace TestOnTankLibrary.Domain
             if (list.Length < ParamCount)
             {
                 errorMessage = "Data column(s) missing.";
-                throw new InvalidElementLocationException(errorMessage);
+                throw new InvalidCustomDataException(errorMessage);
             }
 
             ElementLocationType locationType;
             if (!Enum.TryParse(list[1], out locationType))
             {
                 errorMessage = $"Unknown location type: {list[1]}";
-                throw new InvalidElementLocationException(errorMessage);
+                throw new InvalidCustomDataException(errorMessage);
             }
 
             Key = list[0];

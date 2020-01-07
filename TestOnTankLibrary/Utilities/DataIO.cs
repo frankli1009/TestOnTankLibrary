@@ -7,6 +7,15 @@ namespace TestOnTankLibrary.Utilities
 {
     public class DataIO
     {
+        /// <summary>
+        /// Read data from an Excel file.
+        /// </summary>
+        /// <typeparam name="T">The type of data to read.</typeparam>
+        /// <param name="xlsFilePath">The file path of the Excel file</param>
+        /// <param name="sheetName">The name of the sheet to read</param>
+        /// <param name="colCount">The number of columns to read</param>
+        /// <param name="errorMessage">The error message that indicate the reason when failed to read the data.</param>
+        /// <returns>The data list</returns>
         public static List<T> ReadDataFromExcelFile<T>(string xlsFilePath,
             string sheetName, int colCount, out string errorMessage) where T : CustomData
         {

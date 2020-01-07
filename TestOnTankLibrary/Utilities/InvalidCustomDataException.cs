@@ -9,12 +9,12 @@ namespace TestOnTankLibrary.Utilities
     /// with invalid location type or value.
     /// </summary>
     [Serializable]
-    public class InvalidElementLocationException : NotFoundException
+    public class InvalidCustomDataException : NotFoundException
     {
         /// <summary>
         /// Initializes a new instance of the InvalidElementLocationException class.
         /// </summary>
-        public InvalidElementLocationException()
+        public InvalidCustomDataException()
         {
         }
 
@@ -23,7 +23,7 @@ namespace TestOnTankLibrary.Utilities
         /// a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public InvalidElementLocationException(string message)
+        public InvalidCustomDataException(string message)
             : base(message)
         {
 
@@ -36,7 +36,7 @@ namespace TestOnTankLibrary.Utilities
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public InvalidElementLocationException(string message, Exception innerException)
+        public InvalidCustomDataException(string message, Exception innerException)
             : base(message, innerException)
         {
 
@@ -49,7 +49,7 @@ namespace TestOnTankLibrary.Utilities
         /// about the exception being thrown.</param>
         /// <param name="context">The StreamingContext that contains contextual information
         /// about the source or destination.</param>
-        public InvalidElementLocationException(SerializationInfo info, StreamingContext context)
+        public InvalidCustomDataException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
 

@@ -15,6 +15,7 @@ namespace TestOnTankLibrary.Pages
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
+            // Initialize and read the settings
             CustomDataCollection<ElementLocation> locations = (new CustomDataCollection<ElementLocation>()).LoadDataFromXls(
                Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "../../../Data/Location.xlsx")), "Location");
             CustomDataCollection<PageUrl> urls = (new CustomDataCollection<PageUrl>()).LoadDataFromXls(

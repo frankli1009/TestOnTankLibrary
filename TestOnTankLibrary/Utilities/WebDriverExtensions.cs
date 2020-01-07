@@ -7,15 +7,21 @@ namespace TestOnTankLibrary.Utilities
 {
     public static class WebDriverExtensions
     {
+        /// <summary>
+        /// Find an element by ElementLocation object
+        /// </summary>
+        /// <param name="driver">The IWebDriver to find the element.</param>
+        /// <param name="location">The element location.</param>
+        /// <returns>The element found.</returns>
         public static IWebElement FindElement(this IWebDriver driver, ElementLocation location)
         {
             if (location == null)
             {
-                throw new InvalidElementLocationException("Element location is null.");
+                throw new InvalidCustomDataException("Element location is null.");
             }
             if (string.IsNullOrWhiteSpace(location.Value))
             {
-                throw new InvalidElementLocationException("The value of element location is null or empty.");
+                throw new InvalidCustomDataException("The value of element location is null or empty.");
             }
             switch(location.LocationType)
             {
@@ -36,19 +42,25 @@ namespace TestOnTankLibrary.Utilities
                 case ElementLocationType.XPath:
                     return driver.FindElement(By.XPath(location.Value));
                 default:
-                    throw new InvalidElementLocationException("Invalid type of element location.");
+                    throw new InvalidCustomDataException("Invalid type of element location.");
             }
         }
 
+        /// <summary>
+        /// Find ReadOnlyCollection of elements by ElementLocation object
+        /// </summary>
+        /// <param name="driver">The IWebDirver to find the elements.</param>
+        /// <param name="location">The location of the elements.</param>
+        /// <returns>ReadOnlyCollection of elements found.</returns>
         public static IReadOnlyCollection<IWebElement> FindElements(this IWebDriver driver, ElementLocation location)
         {
             if (location == null)
             {
-                throw new InvalidElementLocationException("Element location is null.");
+                throw new InvalidCustomDataException("Element location is null.");
             }
             if (string.IsNullOrWhiteSpace(location.Value))
             {
-                throw new InvalidElementLocationException("The value of element location is null or empty.");
+                throw new InvalidCustomDataException("The value of element location is null or empty.");
             }
             switch (location.LocationType)
             {
@@ -69,7 +81,7 @@ namespace TestOnTankLibrary.Utilities
                 case ElementLocationType.XPath:
                     return driver.FindElements(By.XPath(location.Value));
                 default:
-                    throw new InvalidElementLocationException("Invalid type of element location.");
+                    throw new InvalidCustomDataException("Invalid type of element location.");
             }
         }
     }

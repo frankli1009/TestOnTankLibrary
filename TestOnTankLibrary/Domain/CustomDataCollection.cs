@@ -4,6 +4,10 @@ using TestOnTankLibrary.Utilities;
 
 namespace TestOnTankLibrary.Domain
 {
+    /// <summary>
+    /// A custom data collection of CustomData
+    /// </summary>
+    /// <typeparam name="T">The exact type of CustomData</typeparam>
     public class CustomDataCollection<T> where T : CustomData
     {
         protected bool successfullyLoaded;
@@ -18,6 +22,11 @@ namespace TestOnTankLibrary.Domain
         public bool SuccessfullyLoaded => successfullyLoaded;
         public string ErrorMessage => errorMessage;
 
+        /// <summary>
+        /// Find the data record by key.
+        /// </summary>
+        /// <param name="key">The key to locate the data record.</param>
+        /// <returns>The data record if found, otherwise return null.</returns>
         public T Find(string key)
         {
             if (list == null) return null;
@@ -33,6 +42,12 @@ namespace TestOnTankLibrary.Domain
             return null;
         }
 
+        /// <summary>
+        /// Load data collection from an Excel file.
+        /// </summary>
+        /// <param name="xlsFilePath">The file path that contains the data.</param>
+        /// <param name="sheetName">The name of sheet that contains the data.</param>
+        /// <returns>The data collection itself.</returns>
         public CustomDataCollection<T> LoadDataFromXls(string xlsFilePath, string sheetName)
         {
             list.Clear();
