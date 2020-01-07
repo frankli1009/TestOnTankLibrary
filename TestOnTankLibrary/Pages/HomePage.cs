@@ -152,9 +152,11 @@ namespace TestOnTankLibrary.Pages
             Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
         }
 
-        [TestCase(2)]
-        [TestCase(3)]
-        public void TestDisplayingEditPage(int selectRow)
+        [TestCase(2, "Edit")]
+        [TestCase(3, "Edit")]
+        [TestCase(2, "Delete")]
+        [TestCase(3, "Delete")]
+        public void TestDisplayingEditPage(int selectRow, string operation)
         {
             //Arrange
 
@@ -165,7 +167,7 @@ namespace TestOnTankLibrary.Pages
             string nameOfTank = element.Text;
 
             //Get Edit button element
-            string editBtnKey = $"Home.List.All.Data.Btn.Edit";
+            string editBtnKey = $"Home.List.All.Data.Btn.{operation}";
             location = (ElementLocation)settings.Locations.Find(editBtnKey).Clone(selectRow);
             element = driver.FindElement(location);
 
@@ -175,9 +177,9 @@ namespace TestOnTankLibrary.Pages
             //Assert
 
             //Wait for displaying edit page
-            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find("Edit.Name");
+            ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find($"{operation}.Name");
             IWebElement expectedElement = driver.FindElement(expectedLocation, 10);
-            string actualNameOfTank = expectedElement.GetAttribute("value");
+            string actualNameOfTank = operation == "Edit" ? expectedElement.GetAttribute("value") : expectedElement.Text;
 
             Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
         }
