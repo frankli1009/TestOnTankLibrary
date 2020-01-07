@@ -13,7 +13,7 @@ namespace TestOnTankLibrary.Utilities
         /// <param name="driver">The IWebDriver to find the element.</param>
         /// <param name="location">The element location.</param>
         /// <returns>The element found.</returns>
-        public static IWebElement FindElement(this IWebDriver driver, ElementLocation location)
+        public static IWebElement FindElement(this IWebDriver driver, ElementLocation location, int timeout = 0)
         {
             if (location == null)
             {
@@ -26,21 +26,29 @@ namespace TestOnTankLibrary.Utilities
             switch(location.LocationType)
             {
                 case ElementLocationType.Id:
-                    return driver.FindElement(By.Id(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.Id(location.Value))
+                        : By.Id(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.Name:
-                    return driver.FindElement(By.Name(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.Name(location.Value))
+                        : By.Name(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.ClassName:
-                    return driver.FindElement(By.ClassName(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.ClassName(location.Value))
+                        : By.ClassName(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.TagName:
-                    return driver.FindElement(By.TagName(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.TagName(location.Value))
+                        : By.TagName(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.CssSelector:
-                    return driver.FindElement(By.CssSelector(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.CssSelector(location.Value))
+                        : By.CssSelector(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.LinkText:
-                    return driver.FindElement(By.LinkText(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.LinkText(location.Value))
+                        : By.LinkText(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.PartialLinkText:
-                    return driver.FindElement(By.PartialLinkText(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.PartialLinkText(location.Value))
+                        : By.PartialLinkText(location.Value).WaitElement(driver, timeout);
                 case ElementLocationType.XPath:
-                    return driver.FindElement(By.XPath(location.Value));
+                    return timeout == 0 ? driver.FindElement(By.XPath(location.Value))
+                        : By.XPath(location.Value).WaitElement(driver, timeout);
                 default:
                     throw new InvalidCustomDataException("Invalid type of element location.");
             }
