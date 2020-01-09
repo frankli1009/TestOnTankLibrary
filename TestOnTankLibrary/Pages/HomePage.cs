@@ -74,6 +74,7 @@ namespace TestOnTankLibrary.Pages
         public void TestClickOnAllGroup()
         {
             //Arrange
+            driver.Navigate().GoToUrl(settings.Urls.Find("Home.WWI").GetValue());
             ElementLocation location = (ElementLocation)settings.Locations.Find("Home.Group.All");
             IWebElement element = driver.FindElement(location);
 
@@ -160,6 +161,9 @@ namespace TestOnTankLibrary.Pages
         {
             //Arrange
 
+            //Navigate to page 2 which only has two rows of default tank data which cannot be edited or deleted
+            driver.Navigate().GoToUrl(string.Format(settings.Urls.Find("Home.Page").GetValue(), 2));
+
             //Get expected tank name
             string nameLocKey = $"Home.List.All.Data.Name";
             ElementLocation location = (ElementLocation)settings.Locations.Find(nameLocKey).Clone(selectRow);
@@ -177,13 +181,80 @@ namespace TestOnTankLibrary.Pages
             //Assert
 
             //Wait for displaying edit page
+            ElementLocation waitForElLocation = (ElementLocation)settings.Locations.Find("FunctionPage.Btn.BackToList");
+            IWebElement waitForElement = driver.FindElement(waitForElLocation, 10);
+
+            //Get actual name
             ElementLocation expectedLocation = (ElementLocation)settings.Locations.Find($"{operation}.Name");
-            IWebElement expectedElement = driver.FindElement(expectedLocation, 10);
-            string actualNameOfTank = operation == "Edit" ? expectedElement.GetAttribute("value") : expectedElement.Text;
+            string actualNameOfTank = string.Empty;
+            IWebElement expectedElement = driver.FindElementIfExists(expectedLocation);
+            if (expectedElement == null)
+            {
+                //For default tanks, edit operation will actually redirect to detail page.
+                expectedLocation = (ElementLocation)settings.Locations.Find("Detail.Name");
+                expectedElement = driver.FindElement(expectedLocation);
+                actualNameOfTank = expectedElement.Text;
+            }
+            else
+            {
+                actualNameOfTank = operation == "Edit" ? expectedElement.GetAttribute("value") : expectedElement.Text;
+            }
 
             Assert.AreEqual(nameOfTank, actualNameOfTank, $"Expecting the name of current tank '{nameOfTank}' but was {actualNameOfTank}.");
         }
 
+        [TestCase(1, 1)]
+        [TestCase(2, 1)]
+        [TestCase(1, 2)]
+        [TestCase(2, 2)]
+        public void TestOnClickPageNumber(int pageNum, int curPageNum)
+        {
+            //Arrange
+
+            if(curPageNum > 1)
+            {
+                //Navigate to current page
+                driver.Navigate().GoToUrl(string.Format(settings.Urls.Find("Home.Page").GetValue(), curPageNum));
+            }
+
+            string prevNameOfTank = string.Empty;
+            ElementLocation tankNameLocation = null;
+            if (pageNum != curPageNum)
+            {
+                //Get expected tank name
+                string nameLocKey = $"Home.List.All.Data.Name";
+                int selectRow = 2;
+                tankNameLocation = (ElementLocation)settings.Locations.Find(nameLocKey).Clone(selectRow);
+                IWebElement tankNameElement = driver.FindElement(tankNameLocation);
+                prevNameOfTank = tankNameElement.Text;
+            }
+
+            //Get list page control page number element
+            string numBtnKey = pageNum == curPageNum ? "Home.List.Page.Disabled" : "Home.List.Page.Enabled";
+            ElementLocation location = (ElementLocation)settings.Locations.Find(numBtnKey).Clone(pageNum);
+            IWebElement element = driver.FindElement(location);
+
+            //Act
+            if (pageNum != curPageNum && element != null) element.Click();
+
+            //Assert
+            if (pageNum == curPageNum)
+            {
+                string className = element.GetAttribute("class");
+                Assert.IsTrue(className.Contains("selected"), $"Expecting classname contains 'selected', but was '{className}'.");
+                Assert.IsTrue(className.Contains("btn-primary"), $"Expecting classname contains 'selected', but was '{className}'.");
+            }
+            else
+            {
+                //Wait for displaying new page list
+                ByExtensions.ElementLocation(tankNameLocation).ElementTextChanged(driver, prevNameOfTank, 10);
+
+                IWebElement expectedElement = driver.FindElement(tankNameLocation);
+                string actualNameOfTank = expectedElement.Text;
+
+                Assert.AreNotEqual(prevNameOfTank, actualNameOfTank, $"Expecting a different name of the tank in the 2nd row '{prevNameOfTank}' but was the same.");
+            }
+        }
 
     }
 }

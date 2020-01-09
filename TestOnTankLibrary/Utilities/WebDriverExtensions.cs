@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 using TestOnTankLibrary.Domain;
 
@@ -92,5 +93,57 @@ namespace TestOnTankLibrary.Utilities
                     throw new InvalidCustomDataException("Invalid type of element location.");
             }
         }
+
+        /// <summary>
+        /// Find the first element if exists
+        /// </summary>
+        /// <param name="driver">The IWebDirver to find the element.</param>
+        /// <param name="by">The way to find the element.</param>
+        /// <returns>The element that found or null if not exists.</returns>
+        public static IWebElement FindElementIfExists(this IWebDriver driver, By by)
+        {
+            var elements = driver.FindElements(by);
+            return (elements.Count >= 1) ? elements.First() : null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="driver">The IWebDirver to find the element.</param>
+        /// <param name="location">The element location.</param>
+        /// <returns>The element that found or null if not exists.</returns>
+        public static IWebElement FindElementIfExists(this IWebDriver driver, ElementLocation location)
+        {
+            if (location == null)
+            {
+                throw new InvalidCustomDataException("Element location is null.");
+            }
+            if (string.IsNullOrWhiteSpace(location.Value))
+            {
+                throw new InvalidCustomDataException("The value of element location is null or empty.");
+            }
+            switch (location.LocationType)
+            {
+                case ElementLocationType.Id:
+                    return driver.FindElementIfExists(By.Id(location.Value));
+                case ElementLocationType.Name:
+                    return driver.FindElementIfExists(By.Name(location.Value));
+                case ElementLocationType.ClassName:
+                    return driver.FindElementIfExists(By.ClassName(location.Value));
+                case ElementLocationType.TagName:
+                    return driver.FindElementIfExists(By.TagName(location.Value));
+                case ElementLocationType.CssSelector:
+                    return driver.FindElementIfExists(By.CssSelector(location.Value));
+                case ElementLocationType.LinkText:
+                    return driver.FindElementIfExists(By.LinkText(location.Value));
+                case ElementLocationType.PartialLinkText:
+                    return driver.FindElementIfExists(By.PartialLinkText(location.Value));
+                case ElementLocationType.XPath:
+                    return driver.FindElementIfExists(By.XPath(location.Value));
+                default:
+                    throw new InvalidCustomDataException("Invalid type of element location.");
+            }
+        }
+
     }
 }
