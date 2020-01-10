@@ -38,16 +38,34 @@ namespace TestOnTankLibrary.Pages
         public void TestAddTank()
         {
             //Arrange
-            ElementLocation location = (ElementLocation)settings.Locations.Find("Home.AddTank");
+            ElementLocation location = (ElementLocation)settings.Locations.Find("Home.AddTank.Add");
             IWebElement element = driver.FindElement(location);
 
             //Act
             if (element != null) element.Click();
 
             //Assert
-            ExpectedSetting expected = (ExpectedSetting)settings.Expecteds.Find("Add.Title");
-            string title = driver.Title;
-            Assert.AreEqual(expected.Value, title, $"Expecting the title of Add page '{expected.Value}' but was '{title}'.");
+            ElementLocation modalLocation = (ElementLocation)settings.Locations.Find("Home.AddTank.ResetModal");
+            element = driver.FindElement(modalLocation);
+            if (element.Displayed)
+            {
+                // Warning and urging to reset data means add button worked.
+
+                // Added test for reset data here on a temporary basis to help reset data.
+                location = (ElementLocation)settings.Locations.Find("Home.AddTank.ResetData");
+                element = driver.FindElement(location);
+                element.Click();
+
+                location = (ElementLocation)settings.Locations.Find("Home.AddTank.CloseModal");
+                element = driver.FindElement(location, 10);
+                Assert.IsTrue(element.Displayed);
+            }
+            else
+            {
+                ExpectedSetting expected = (ExpectedSetting)settings.Expecteds.Find("Add.Title");
+                string title = driver.Title;
+                Assert.AreEqual(expected.Value, title, $"Expecting the title of Add page '{expected.Value}' but was '{title}'.");
+            }
         }
 
         [TestCase("Home.Group.WWI")]
@@ -256,5 +274,10 @@ namespace TestOnTankLibrary.Pages
             }
         }
 
+        [Test]
+        public void TestOnPageDirectionBtns()
+        {
+
+        }
     }
 }
